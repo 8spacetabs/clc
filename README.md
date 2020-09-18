@@ -19,4 +19,4 @@ Running `clc "<expression>"` will evaluate the expression and exit after printin
 \       square root
 ()      forcing precedence
 ```
-All operations are done on `long double`s.
+All operations are done on `long double`s. Binary operators are left-associative. Precedence is BIDMAS.
