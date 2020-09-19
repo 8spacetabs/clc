@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
         if (argc > 1) {
                 token_stream = lex(argv[1]);
                 if (token_stream == NULL) {
-                        fputs("failed to allocate token stream", stderr);
+                        fputs("failed to allocate token stream\n", stderr);
                         return ERR_MALLOC;
                 } else if (token_stream == (Token*)ERR_INVALID_CHAR) {
                         return ERR_LEX_FAILED;                        
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
                 while (repl_input = readline("clc> ")) {
                         token_stream = lex(repl_input);
                         if (token_stream == NULL) {
-                                fputs("failed to allocate token stream", stderr);
+                                fputs("failed to allocate token stream\n", stderr);
                                 free(repl_input);
                                 return ERR_MALLOC;
                         } else if (token_stream == ERR_INVALID_CHAR) {
