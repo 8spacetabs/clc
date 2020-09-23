@@ -9,10 +9,16 @@ Token *token_stream_ptr;
 
 static long double parse_addsub(void);
 
+//
+// next_token - set current_token to the next token in the token stream and increments token_stream_ptr
+//
 static inline Token next_token(void) {
         return (current_token = *token_stream_ptr++);
 }
 
+//
+// parse_term - parses parenthesised expressions, unary expressions with '+', '-' and '\' and constants
+//
 static long double parse_term(void) {
         long double result;
 
@@ -59,7 +65,10 @@ static long double parse_term(void) {
         return result;
 }
 
-static long double parse_powsqr(void) {
+//
+// parse_pow - parses exponent expressions with '^'
+//
+static long double parse_pow(void) {
         long double result = parse_term();
 
         while (current_token.type == TT_POW) {
@@ -70,20 +79,23 @@ static long double parse_powsqr(void) {
         return result;
 }
 
+//
+// parse_muldivmod - parses multiplication, division and modulo expression with '*', '/' and '%'
+//
 static long double parse_muldivmod(void) {
-        long double result = parse_powsqr();
+        long double result = parse_pow();
         long double dividend;
 
         for (;;) {
                 switch (current_token.type) {
                         case TT_MUL:
                                 next_token();
-                                result *= parse_powsqr();
+                                result *= parse_pow();
                                 break;
                         case TT_DIV:
                                 next_token();
 
-                                dividend = parse_powsqr();
+                                dividend = parse_pow();
                                 if (dividend == 0)
                                         goto div_by_zero;
 
@@ -92,7 +104,7 @@ static long double parse_muldivmod(void) {
                         case TT_MOD:
                                 next_token();
 
-                                dividend = parse_powsqr();
+                                dividend = parse_pow();
                                 if (dividend == 0)
                                         goto div_by_zero;
 
@@ -104,12 +116,14 @@ static long double parse_muldivmod(void) {
                 }
         }
 
-        return result;
 div_by_zero:
         fputs("detected division by zero\n", stderr);
         return 0;
 }
 
+//
+// parse_addsub - parses addition and subtraction expressions with '+' and '-'
+//
 static long double parse_addsub(void) {
         long double result = parse_muldivmod();
 
@@ -125,6 +139,9 @@ static long double parse_addsub(void) {
         }
 }
 
+//
+// parse - points token_stream_ptr at the token stream and begins parsing, returns eval of entire tokenised expression
+//
 long double parse(Token *token_stream) {
         token_stream_ptr = token_stream;
         next_token();

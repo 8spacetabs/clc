@@ -7,6 +7,7 @@
 #include "lexer.h"
 #include "parser.h"
 
+// exit codes
 enum {
         SUCCESS,
         ERR_LEX_FAILED,
@@ -18,6 +19,7 @@ int main(int argc, char **argv) {
         char *repl_input = NULL;
 
         if (argc > 1) {
+                // just process argv[1]
                 token_stream = lex(argv[1]);
                 if (token_stream == NULL) {
                         fputs("failed to allocate token stream\n", stderr);
@@ -29,6 +31,7 @@ int main(int argc, char **argv) {
                 printf("\n%Lf\n", parse(token_stream));
                 free(token_stream);
         } else {
+                // start repl
                 while (repl_input = readline("clc> ")) {
                         token_stream = lex(repl_input);
                         if (token_stream == NULL) {

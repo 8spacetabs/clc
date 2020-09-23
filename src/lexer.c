@@ -7,6 +7,9 @@
 static char *char_stream_ptr;
 static char current_char;
 
+//
+// next_char - sets current_char to the next character in the character stream and increments char_stream_ptr
+//
 static inline char next_char(void) {
         return (current_char = *char_stream_ptr++);
 }
@@ -62,17 +65,26 @@ Token *lex(char *char_stream) {
                 } else {
                         switch (current_char) {
                                 case '+':
+                                        // FALLTHROUGH
                                 case '-':
+                                        // FALLTHROUGH
                                 case '*':
+                                        // FALLTHROUGH
                                 case '/':
+                                        // FALLTHROUGH
                                 case '%':
+                                        // FALLTHROUGH
                                 case '^':
+                                        // FALLTHROUGH
                                 case '\\':
+                                        // FALLTHROUGH
                                 case '(':
+                                        // FALLTHROUGH
                                 case ')':
                                         token_stream_ptr->type = current_char;
                                         break;
                                 case '\0':
+                                        // FALLTHROUGH
                                 case '\n':
                                         token_stream_ptr->type = TT_STREAM_END;
                                         return token_stream;
