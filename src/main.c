@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
                                 free(repl_input);
                                 return ERR_MALLOC;
                         } else if (token_stream == ERR_INVALID_CHAR) {
+                                add_history(repl_input);
                                 continue;
                         }
 

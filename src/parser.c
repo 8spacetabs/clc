@@ -36,12 +36,10 @@ static long double parse_term(void) {
                         break;
                 case TT_SUB:
                         next_token();
-                        result = -parse_term();
-                        break;
+                        return -parse_term();
                 case TT_ADD:
                         next_token();
-                        result = parse_term();
-                        break;
+                        return parse_term();
                 case TT_SQR:
                         next_token();
 
