@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
                 free(token_stream);
         } else {
                 // start repl
-                while (repl_input = readline("clc> ")) {
+                while ((repl_input = readline("clc> "))) {
                         token_stream = lex(repl_input);
                         if (token_stream == NULL) {
                                 fputs("failed to allocate token stream\n", stderr);

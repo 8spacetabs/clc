@@ -6,6 +6,7 @@
         typedef enum {
                 TT_STREAM_END = 0,
                 TT_CONST      = 1,
+                TT_ANSWER     = 2,
 
                 TT_ADD = '+',
                 TT_SUB = '-',

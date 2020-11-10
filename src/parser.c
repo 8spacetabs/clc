@@ -4,16 +4,17 @@
 #include "parser.h"
 #include "lexer.h"
 
-Token current_token;
-Token *token_stream_ptr;
+static Token g_current_token;
+static Token *g_token_stream_ptr;
+static long double g_last_result;
 
 static long double parse_addsub(void);
 
 //
-// next_token - set current_token to the next token in the token stream and increments token_stream_ptr
+// next_token - set g_current_token to the next token in the token stream and increments g_token_stream_ptr
 //
 static inline Token next_token(void) {
-        return (current_token = *token_stream_ptr++);
+        return (g_current_token = *g_token_stream_ptr++);
 }
 
 //
@@ -22,14 +23,14 @@ static inline Token next_token(void) {
 static long double parse_term(void) {
         long double result;
 
-        switch (current_token.type) {
+        switch (g_current_token.type) {
                 case TT_CONST:
-                        result = current_token.val;
+                        result = g_current_token.val;
                         break;
                 case TT_LPAREN:
                         next_token();
                         result = parse_addsub();
-                        if (current_token.type != TT_RPAREN) {
+                        if (g_current_token.type != TT_RPAREN) {
                                 fputs("expected a closing ')'\n", stderr);
                                 return 0;
                         }
@@ -50,6 +51,8 @@ static long double parse_term(void) {
                         }
 
                         return result;
+                case TT_ANSWER:
+                        return g_last_result;
                 case TT_STREAM_END:
                         fputs("unexpected end of input\n", stderr);
                         return 0;
@@ -69,7 +72,7 @@ static long double parse_term(void) {
 static long double parse_pow(void) {
         long double result = parse_term();
 
-        while (current_token.type == TT_POW) {
+        while (g_current_token.type == TT_POW) {
                 next_token();
                 result = powl(result, parse_term());
         } 
@@ -85,7 +88,7 @@ static long double parse_muldivmod(void) {
         long double dividend;
 
         for (;;) {
-                switch (current_token.type) {
+                switch (g_current_token.type) {
                         case TT_MUL:
                                 next_token();
                                 result *= parse_pow();
@@ -126,10 +129,10 @@ static long double parse_addsub(void) {
         long double result = parse_muldivmod();
 
         for (;;) {
-                if (current_token.type == TT_ADD) {
+                if (g_current_token.type == TT_ADD) {
                         next_token();
                         result += parse_muldivmod();
-                } else if (current_token.type == TT_SUB) {
+                } else if (g_current_token.type == TT_SUB) {
                         next_token();
                         result -= parse_muldivmod();
                 } else
@@ -138,11 +141,11 @@ static long double parse_addsub(void) {
 }
 
 //
-// parse - points token_stream_ptr at the token stream and begins parsing, returns eval of entire tokenised expression
+// parse - points g_token_stream_ptr at the token stream and begins parsing, returns eval of entire tokenised expression
 //
 long double parse(Token *token_stream) {
-        token_stream_ptr = token_stream;
+        g_token_stream_ptr = token_stream;
         next_token();
         
-        return parse_addsub();
+        return g_last_result = parse_addsub();
 }

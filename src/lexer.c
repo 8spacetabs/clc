@@ -83,6 +83,9 @@ Token *lex(char *char_stream) {
                                 case ')':
                                         token_stream_ptr->type = current_char;
                                         break;
+                                case 'a':
+                                        token_stream_ptr->type = TT_ANSWER;
+                                        break;
                                 case '\0':
                                         // FALLTHROUGH
                                 case '\n':

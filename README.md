@@ -19,4 +19,9 @@ Running `clc "<expression>"` will evaluate the expression and exit after printin
 \       square root
 ()      forcing precedence
 ```
+### Valid operands
+```
+[0-9]*\.*[0-9]*        integer/real numbers
+a                      previous answer
+```
 All operations are done on `long double`s. Binary operators are left-associative. Precedence is BIDMAS.
