@@ -52,7 +52,8 @@ static long double parse_term(void) {
 
                         return result;
                 case TT_ANSWER:
-                        return g_last_result;
+                        result = g_last_result;
+                        break;
                 case TT_STREAM_END:
                         fputs("unexpected end of input\n", stderr);
                         return 0;
